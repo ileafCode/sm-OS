@@ -1,4 +1,4 @@
-#include "print/text_print.cpp"
+#include "stdio/text_print.cpp"
 #include "idt/idt.cpp"
 #include "keyboard/keyboard_handler.cpp"
 #include "mem_map/mem_map.cpp"
@@ -6,6 +6,7 @@
 #include "math_nums/math.cpp"
 #include "pit/pit.cpp"
 #include "sound/sound.cpp"
+#include "stdio/input.cpp"
 
 extern const char logo[];
 

@@ -1,19 +1,16 @@
 #pragma once
 
 #include "../typedefs.h"
-#include "../print/text_print.cpp"
+#include "../stdio/text_print.cpp"
 
 bool left_shift_pressed = false;
 bool caps_on = false;
+bool enter_pressed;
 uint_8 last_sc;
 
 void standard_kbd_handler(uint_8 sc, uint_8 chr)
 {
-    if (chr != 0)
-    {
-        print_chr(chr);
-    }
-    else
+    if (chr == 0)
     {
         switch (sc)
         {
@@ -36,6 +33,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
             break;
         
         case 0x1C: // Enter
+            enter_pressed = true;
             print_str("\n");
             break;
         

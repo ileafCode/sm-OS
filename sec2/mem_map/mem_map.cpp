@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../typedefs.h"
-#include "../print/text_print.cpp"
+#include "../stdio/text_print.cpp"
 
 struct mem_map_entry 
 {

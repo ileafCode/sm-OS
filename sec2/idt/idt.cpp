@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../typedefs.h"
-#include "../print/text_print.cpp"
+#include "../stdio/text_print.cpp"
 #include "../keyboard/kbd_sc_set_1.h"
 #include "../keyboard/keyboard_handler.cpp"
 #include "../pit/pit.cpp"
 
 void (*main_kbd_handler)(uint_8 sc, uint_8 chr);
+
+uint_8 last_chr;
 
 #define IDT_int_gate  0b10001110
 #define IDT_call_gate 0b10001100
@@ -22,7 +24,6 @@ struct IDT_64
     uint_32 offset_high;
     uint_32 zero;
 };
-
 
 IDT_64 _idt[256];
 extern uint_64 isr0;
@@ -50,7 +51,7 @@ void init_idt()
 
     remap_pic();
 
-    outb(PIC1_DATA, 0b11111100);
+    outb(PIC1_DATA, 0b11111110);
     outb(PIC2_DATA, 0b11111111);
     load_idt();
     
@@ -74,7 +75,10 @@ extern "C" void isr1_handler()
             chr = kb_s1::ScanCodeLookupTableLower[sc];
     
     if (main_kbd_handler != 0)
+    {
+        last_chr = chr;
         main_kbd_handler(sc, chr);
+    }
     outb(0x20, 0x20);
     outb(0xa0, 0x20);
 }
