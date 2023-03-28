@@ -1,22 +1,23 @@
-print_16:
-  push ax
-  push bx
 
-  mov ah, 0x0e
-  .loop:
-    cmp [bx], byte 0
-    je .exit
-    mov al, [bx]
-    int 0x10
-    inc bx
-    jmp .loop
-  .exit:
-    pop ax
-    pop bx
-
+print_char:
+    pusha
+        mov ah, 0x0e
+        int 0x10
+    popa
     ret
 
-newline:
-  mov al, 0xD
-  int 0x10
-  ret
+print:
+    pusha           ; preserve the registers 
+                    ; on the stack.
+    mov bx, ax
+    print_string_loop:
+        mov al, [bx]            ;move buffer index to al
+        cmp al, 0               ;if [[ al == 0 ]]; then
+        je print_string_end    ;   goto print_string_end
+        inc bx                  ;else bx++
+        call print_char
+        jmp print_string_loop  ;   goto print_string_loop
+
+    print_string_end:
+    popa
+    ret

@@ -5,7 +5,10 @@
 
 bool left_shift_pressed = false;
 bool caps_on = false;
-bool enter_pressed;
+bool enter_pressed = false;
+bool backspace_pressed = false;
+bool cursor_en = false;
+bool kbd_en = false;
 uint_8 last_sc;
 
 void standard_kbd_handler(uint_8 sc, uint_8 chr)
@@ -15,6 +18,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         switch (sc)
         {
         case 0x0E: // Backspace
+            backspace_pressed = true;
             set_cursor_pos(cursor_pos - 1);
             print_chr(' ');
             set_cursor_pos(cursor_pos - 1);
@@ -34,7 +38,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         
         case 0x1C: // Enter
             enter_pressed = true;
-            print_str("\n");
+            newl();
             break;
         
         case 0x3A: // Caps Lock
@@ -48,37 +52,43 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
 
 void kbd_arrow(uint_8 sc)
 {
-    switch (sc)
+    if (cursor_en)
     {
-    case 0x50: // Up
-        set_cursor_pos(cursor_pos + VGA_W);
-        break;
-    case 0x48: // Down
-        set_cursor_pos(cursor_pos - VGA_W);
-        break;
-    case 0x4D: // Right
-        set_cursor_pos(cursor_pos + 1);
-        break;
-    case 0x4B: // Left
-        set_cursor_pos(cursor_pos - 1);
-        break;
-    default:
-        break;
+        switch (sc)
+        {
+        case 0x50: // Up
+            set_cursor_pos(cursor_pos + VGA_W);
+            break;
+        case 0x48: // Down
+            set_cursor_pos(cursor_pos - VGA_W);
+            break;
+        case 0x4D: // Right
+            set_cursor_pos(cursor_pos + 1);
+            break;
+        case 0x4B: // Left
+            set_cursor_pos(cursor_pos - 1);
+            break;
+        default:
+            break;
+        }
     }
 }
 
 void kbd_handler(uint_8 sc, uint_8 chr)
 {
-    switch (last_sc)
+    if (kbd_en)
     {
-    case 0xE0:
-        kbd_arrow(sc);
-        break;
+        switch (last_sc)
+        {
+        case 0xE0:
+            kbd_arrow(sc);
+            break;
     
-    default:
-        standard_kbd_handler(sc, chr);
-        break;
+        default:
+            standard_kbd_handler(sc, chr);
+            break;
+        }
     }
-
+    
     last_sc = sc;
 }

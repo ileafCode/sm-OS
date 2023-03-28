@@ -29,7 +29,15 @@ get_long_mode:
 	ret
 
 no_long_mode:
+  mov [0xB8000], byte 'L'
+  mov [0xB8002], byte 'M'
+  mov [0xB8004], byte 'N'
+  mov [0xB8006], byte 'E'
   jmp $
 
 no_cpuid:
+  mov [0xB8000], byte 'C'
+  mov [0xB8002], byte 'P'
+  mov [0xB8004], byte 'U'
+  mov [0xB8006], byte 'E'
   jmp $

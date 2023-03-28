@@ -5,20 +5,24 @@
 #include "../idt/idt.cpp"
 #include "../keyboard/keyboard_handler.cpp"
 
-uint_8 getch(bool p_chr = true)
+uint_8 getch(bool p_chr = true, bool enter_p = true)
 {
-    outb(PIC1_DATA, 0b11111100);
-    outb(PIC2_DATA, 0b11111111);
+    kbd_en = true;
 
     while (true)
     {
         if (last_chr != 0)
         {
+            uint_8 chr = last_chr;
             if (p_chr)
             {
-                print_chr(last_chr);
+                print_chr(chr);
             }
-            return last_chr;
+
+            if (enter_p)
+                while (enter_pressed == false);
+
+            return chr;
         }
     }
 

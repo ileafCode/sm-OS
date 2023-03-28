@@ -30,7 +30,7 @@ void init_heap(uint_64 heap_addr, uint_64 heap_len)
     first_f_mem_seg->next_f_seg = 0;
     first_f_mem_seg->prev_f_seg = 0;
     first_f_mem_seg->free = true;
-    print_str("Initialized heap\n");
+    //print_str("Initialized heap\n");
 }
 
 void* malloc(uint_64 size)

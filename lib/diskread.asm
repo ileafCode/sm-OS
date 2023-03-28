@@ -24,7 +24,7 @@ DiskReadErrorString:
 	db 'Disk Read Failed',0
 
 DiskReadFailed:
-	mov bx, DiskReadErrorString
-	call print_16
+	mov ax, DiskReadErrorString
+	call print
 
 	jmp $

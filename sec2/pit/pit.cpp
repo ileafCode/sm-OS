@@ -60,7 +60,7 @@ namespace PIT
 
         outb(PIT_CHANNEL_0_DATA_PORT, (uint_8) (div & 0xFF));
         outb(PIT_CHANNEL_0_DATA_PORT, (uint_8) ((div & 0xFF00) >> 8));
-        print_str("Initialized PIT\n");
+        //print_str("Initialized PIT\n");
     }
 }
 // namespace PIT

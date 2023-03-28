@@ -1,4 +1,8 @@
 
+mov ah, 0x0e
+mov al, 'i'
+int 0x10
+
 jmp prot_mode
 
 %include "../sec2/asm/gdt.asm"

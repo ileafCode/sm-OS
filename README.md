@@ -36,8 +36,10 @@ sudo apt install gcc
 
 ## Version History
 
-* 0.1
+* 1.0
     * Initial Release
+* 1.1
+    * Support for real hardware
 
 ## Sources
 

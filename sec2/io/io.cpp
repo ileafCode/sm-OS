@@ -23,6 +23,11 @@ void outb(uint_16 port, uint_8 val)
     asm volatile ("outb %0, %1" : : "a"(val), "Nd"(port));
 }
 
+void outw(uint_16 port, uint_16 value)
+{
+    asm volatile ("outw %%ax,%%dx": :"dN"(port), "a"(value));
+}
+
 uint_8 inb(uint_16 port)
 {
     uint_8 ret_val;
@@ -34,9 +39,7 @@ uint_8 inb(uint_16 port)
 
 void io_wait()
 {
-    asm volatile (
-        "outb %%al, $0x80" : : "a"(0)
-    );
+    asm volatile ("outb %%al, $0x80" : : "a"(0));
 }
 
 void sti() { asm volatile("sti"); } // Enable interrupts
