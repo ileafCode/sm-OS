@@ -36,16 +36,6 @@ void _start()
     uint_16 vga_g_width = 320;
     uint_16 vga_g_height = 200;
 
-    //if (gfx::init_graph_vga(vga_g_width, vga_g_height, 1) == 0)
-    //{
-    //    print_str("Failed to init VGA");
-    //    return;
-    //}
-
-    //gfx::clr_scr(0x00, vga_g_height, vga_g_height);
-
-    //*(VGA_GMEM) = 0x3F;
-
     while (true)
     {
         const char* str1 = getstr();
