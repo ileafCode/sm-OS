@@ -8,8 +8,6 @@
 
 void (*main_kbd_handler)(uint_8 sc, uint_8 chr);
 
-uint_8 last_chr;
-
 #define IDT_int_gate  0b10001110
 #define IDT_call_gate 0b10001100
 #define IDT_trap_gate 0b10001111
@@ -76,9 +74,9 @@ extern "C" void isr1_handler()
     
     if (main_kbd_handler != 0)
     {
-        last_chr = chr;
         main_kbd_handler(sc, chr);
     }
+
     outb(0x20, 0x20);
     outb(0xa0, 0x20);
 }

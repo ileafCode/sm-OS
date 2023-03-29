@@ -7,10 +7,11 @@
 #include "pit/pit.cpp"
 #include "sound/sound.cpp"
 #include "stdio/input.cpp"
-#include "gfx/gfx.cpp"
-#include "gfx/font.h"
+#include "etc/string.cpp"
 
 extern const char logo[];
+
+void drawVGA();
 
 void _start()
 {
@@ -45,8 +46,25 @@ void _start()
 
     //*(VGA_GMEM) = 0x3F;
 
-    print_str("Hello\n");
-    getch();
+    while (true)
+    {
+        const char* str1 = getstr();
+
+        if (str_cmp(str1, "ping"))
+        {
+           print_str("Pong!\n");
+        }
+        else if (str_cmp(str1, "pong"))
+        {
+           print_str("Ping!\n");
+        }
+        else
+        {
+            print_str("?\n");
+        }
+
+        clear_input_buffer();
+    }
 
     return;
 }

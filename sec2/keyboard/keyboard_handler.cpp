@@ -2,6 +2,8 @@
 
 #include "../typedefs.h"
 #include "../stdio/text_print.cpp"
+#include "../etc/string.cpp"
+#include "../dynamic_mem/heap.cpp"
 
 bool left_shift_pressed = false;
 bool caps_on = false;
@@ -11,9 +13,18 @@ bool cursor_en = false;
 bool kbd_en = false;
 uint_8 last_sc;
 
+static char buffer[255];
+uint_8 buf_i;
+
 void standard_kbd_handler(uint_8 sc, uint_8 chr)
 {
-    if (chr == 0)
+    if (chr != 0)
+    {   
+        buffer[buf_i] = chr;
+        buf_i++;
+        print_chr(chr);
+    }
+    else
     {
         switch (sc)
         {
@@ -22,6 +33,9 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
             set_cursor_pos(cursor_pos - 1);
             print_chr(' ');
             set_cursor_pos(cursor_pos - 1);
+
+            buf_i -= 1;
+            buffer[buf_i] = 0;
             break;
         
         case 0x0F: // Tab
@@ -39,6 +53,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         case 0x1C: // Enter
             enter_pressed = true;
             newl();
+            buf_i = 0;
             break;
         
         case 0x3A: // Caps Lock

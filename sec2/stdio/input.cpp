@@ -1,30 +1,22 @@
 #pragma once
 
 #include "../typedefs.h"
-#include "../io/io.cpp"
-#include "../idt/idt.cpp"
 #include "../keyboard/keyboard_handler.cpp"
 
-uint_8 getch(bool p_chr = true, bool enter_p = true)
+void clear_input_buffer() // Use this after a getstr() function. Otherwise, it will "combine" a string and the last string together
+{
+    for (int i = 0; i < 255; i++)
+    {
+        buffer[i] = 0; // clear the input buffer
+    }
+}
+
+const char* getstr()
 {
     kbd_en = true;
+    while (enter_pressed == false);
+    kbd_en = false;
+    enter_pressed = false;
 
-    while (true)
-    {
-        if (last_chr != 0)
-        {
-            uint_8 chr = last_chr;
-            if (p_chr)
-            {
-                print_chr(chr);
-            }
-
-            if (enter_p)
-                while (enter_pressed == false);
-
-            return chr;
-        }
-    }
-
-    return 0;
+    return (const char*)buffer;
 }
