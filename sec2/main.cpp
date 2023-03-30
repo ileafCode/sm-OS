@@ -19,7 +19,7 @@ void _start()
     clear_screen();
     set_cursor_pos(pos_coords(0, 0));
     print_str(logo);
-    print_str("\n\nsm/OS v1.0\n");
+    print_str("\n\nsm/OS v1.2\n");
     
     PIT::set_div(65535);
     PIT::init_pit();
@@ -39,16 +39,17 @@ void _start()
     while (true)
     {
         const char* str1 = getstr();
+        str1 = string::str_lower((char*)str1);
 
-        if (str_cmp(str1, "ping"))
+        if (string::str_cmp(str1, "ping"))
         {
            print_str("Pong!\n");
         }
-        else if (str_cmp(str1, "pong"))
+        else if (string::str_cmp(str1, "pong"))
         {
            print_str("Ping!\n");
         }
-        else if (str_cmp(str1, "rand"))
+        else if (string::str_cmp(str1, "rand"))
         {
             math::srand(cmos::now());
             print_str(int_str(math::rand() % 100)); newl();

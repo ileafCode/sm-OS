@@ -35,6 +35,9 @@ main:
 
     sti
 
+    ;mov ax, 01h
+    ;int 0x10
+
     mov [BOOT_DISK], dl
 
     mov bp, 0x7c00

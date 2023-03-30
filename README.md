@@ -42,6 +42,9 @@ sudo apt install gcc
     * Support for real hardware
     * CMOS support
     * Random number generation
+* 1.2
+    * Upper and Lower string modification using string namespace
+    * Scrolling screen
 
 ## Sources
 

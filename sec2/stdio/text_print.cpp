@@ -2,6 +2,7 @@
 
 #include "../io/io.cpp"
 #include "../typedefs.h"
+#include "../dynamic_mem/mem.cpp"
 
 #define VGA_MEM (unsigned char*) 0xB8000
 #define VGA_W 80
@@ -68,8 +69,9 @@ void set_cursor_pos(uint_16 position)
 
     cursor_pos = position;
 
-    if (cursor_pos > 2000)
+    if (cursor_pos >= (VGA_W * VGA_H))
     {
+        clear_screen();
         cursor_pos = 0;
     }
 }
@@ -77,6 +79,15 @@ void set_cursor_pos(uint_16 position)
 uint_16 pos_coords(uint_8 x, uint_8 y)
 {
     return y * VGA_W + x;
+}
+
+int get_cursor_pos()
+{
+    outb(0x3D4, 14);
+    int offset = inb(0x3D5) << 8;
+    outb(0x3D4, 15);
+    offset += inb(0x3D5);
+    return offset * 2;
 }
 
 void print_str(const char* str, uint_8 c = default_color)

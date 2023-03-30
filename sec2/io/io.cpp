@@ -37,6 +37,15 @@ uint_8 inb(uint_16 port)
     return ret_val;
 }
 
+uint_16 inw(uint_16 port)
+{
+    uint_8 ret_val;
+    asm volatile ("inw %%dx, %%ax"
+    : "=a"(ret_val)
+    : "Nd"(port));
+    return ret_val;
+}
+
 void io_wait()
 {
     asm volatile ("outb %%al, $0x80" : : "a"(0));
@@ -45,7 +54,7 @@ void io_wait()
 void sti() { asm volatile("sti"); } // Enable interrupts
 void cli() { asm volatile("cli"); } // Clear interrupts
 
-void halt() { asm volatile("hlt"); } // Clear interrupts
+void halt() { asm volatile("hlt"); } // Halt CPU
 
 void remap_pic()
 {
