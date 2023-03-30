@@ -8,6 +8,7 @@
 #include "sound/sound.cpp"
 #include "stdio/input.cpp"
 #include "etc/string.cpp"
+#include "rtc_cmos/cmos.cpp"
 
 extern const char logo[];
 
@@ -24,6 +25,8 @@ void _start()
     PIT::init_pit();
     init_idt();
 
+    struct timeval t;
+
     main_kbd_handler = kbd_handler;
 
     mem_map_entry** usable_mem_maps = get_usable_mem_regions();
@@ -32,9 +35,6 @@ void _start()
     
     //adlib::init();
     //startup_sound();
-
-    uint_16 vga_g_width = 320;
-    uint_16 vga_g_height = 200;
 
     while (true)
     {
@@ -48,6 +48,11 @@ void _start()
         {
            print_str("Ping!\n");
         }
+        else if (str_cmp(str1, "rand"))
+        {
+            math::srand(cmos::now());
+            print_str(int_str(math::rand() % 100)); newl();
+        }
         else
         {
             print_str("?\n");
@@ -56,5 +61,5 @@ void _start()
         clear_input_buffer();
     }
 
-    return;
+    for (;;); // Endless loop.
 }

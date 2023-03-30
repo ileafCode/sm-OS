@@ -4,6 +4,7 @@
 
 namespace math
 {
+    uint_64 seed = 0;
     const float PI = 3.14159;
     double deg_rad(double degree)
     {
@@ -86,5 +87,18 @@ namespace math
     double floor(double x)
     {
         return __builtin_floor(x);
+    }
+
+    void srand(uint_64 seed_set)
+    {
+        seed = seed_set;
+    }
+
+    uint_64 rand()
+    {
+        seed ^= seed << 13;
+        seed ^= seed >> 17;
+        seed ^= seed << 5;
+        return seed;
     }
 };

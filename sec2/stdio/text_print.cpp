@@ -5,6 +5,7 @@
 
 #define VGA_MEM (unsigned char*) 0xB8000
 #define VGA_W 80
+#define VGA_H 25
 
 #define FOREGROUND_BLACK 0x00
 #define FOREGROUND_BLUE 0x01

@@ -49,8 +49,8 @@ void init_idt()
 
     remap_pic();
 
-    outb(PIC1_DATA, 0b11111100);
-    outb(PIC2_DATA, 0b11111111);
+    outb(PIC1_DATA, 0b11111101);
+    outb(PIC2_DATA, 0b11111110);
     load_idt();
     
     //print_str("Initialized IDT\n");

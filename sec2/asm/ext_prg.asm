@@ -56,7 +56,7 @@ start_prot_mode:
 
 start_64:
   call activate_sse
-  call _Z6_startv
+  jmp _Z6_startv
   jmp $
 
 activate_sse:
