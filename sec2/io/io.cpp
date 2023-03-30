@@ -28,6 +28,11 @@ void outw(uint_16 port, uint_16 value)
     asm volatile ("outw %%ax,%%dx": :"dN"(port), "a"(value));
 }
 
+void outl(uint_16 port, uint_64 value)
+{
+    asm volatile ("outl %%eax,%%edx": :"dN"(port), "a"(value));
+}
+
 uint_8 inb(uint_16 port)
 {
     uint_8 ret_val;
@@ -41,6 +46,15 @@ uint_16 inw(uint_16 port)
 {
     uint_8 ret_val;
     asm volatile ("inw %%dx, %%ax"
+    : "=a"(ret_val)
+    : "Nd"(port));
+    return ret_val;
+}
+
+uint_64 inl(uint_16 port)
+{
+    uint_8 ret_val;
+    asm volatile ("inl %%edx, %%eax"
     : "=a"(ret_val)
     : "Nd"(port));
     return ret_val;
@@ -76,4 +90,15 @@ void remap_pic()
 
     outb(PIC1_DATA, a1);
     outb(PIC2_DATA, a2);
+}
+
+void pic_end_master()
+{
+    outb(PIC1_CMD, PIC_EOI);
+}
+
+void pic_end_slave()
+{
+    outb(PIC2_CMD, PIC_EOI);
+    outb(PIC1_CMD, PIC_EOI);
 }

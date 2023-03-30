@@ -44,7 +44,9 @@
 
 uint_16 cursor_pos;
 
-uint_64 default_color = BACKGROUND_BLUE | FOREGROUND_WHITE;
+uint_64 default_color = BACKGROUND_BLACK | FOREGROUND_WHITE;
+
+void newl();
 
 void clear_screen(uint_64 clr_color = default_color)
 {
@@ -117,6 +119,39 @@ void print_str(const char* str, uint_8 c = default_color)
     }
 
     set_cursor_pos(index);
+}
+
+void print_ok(const char* str, bool newline = true)
+{
+    print_str("[kernel]: OK | ", BACKGROUND_BLACK | FOREGROUND_GREEN);
+    print_str(str);
+
+    if (newline)
+    {
+        newl();
+    }
+}
+
+void print_warn(const char* str, bool newline = true)
+{
+    print_str("[kernel]: WARN | ", BACKGROUND_BLACK | FOREGROUND_YELLOW);
+    print_str(str);
+    
+    if (newline)
+    {
+        newl();
+    }
+}
+
+void print_err(const char* str, bool newline = true)
+{
+    print_str("[kernel]: ERROR | ", BACKGROUND_BLACK | FOREGROUND_RED);
+    print_str(str);
+
+    if (newline)
+    {
+        newl();
+    }
 }
 
 void print_chr(char chr, uint_8 c = default_color)

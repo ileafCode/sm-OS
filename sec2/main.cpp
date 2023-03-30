@@ -1,12 +1,12 @@
 #include "stdio/text_print.cpp"
-#include "idt/idt.cpp"
-#include "keyboard/keyboard_handler.cpp"
+#include "stdio/input.cpp"
 #include "mem_map/mem_map.cpp"
 #include "dynamic_mem/heap.cpp"
+#include "idt/idt.cpp"
+#include "keyboard/keyboard_handler.cpp"
 #include "math_nums/math.cpp"
 #include "pit/pit.cpp"
 #include "sound/sound.cpp"
-#include "stdio/input.cpp"
 #include "etc/string.cpp"
 #include "rtc_cmos/cmos.cpp"
 
@@ -36,6 +36,8 @@ void _start()
     //adlib::init();
     //startup_sound();
 
+    print_ok("Boot successful");
+
     while (true)
     {
         const char* str1 = getstr();
@@ -43,20 +45,20 @@ void _start()
 
         if (string::str_cmp(str1, "ping"))
         {
-           print_str("Pong!\n");
+          print_str("Pong!\n");
         }
         else if (string::str_cmp(str1, "pong"))
         {
-           print_str("Ping!\n");
+          print_str("Ping!\n");
         }
         else if (string::str_cmp(str1, "rand"))
         {
-            math::srand(cmos::now());
-            print_str(int_str(math::rand() % 100)); newl();
+           math::srand(cmos::now());
+           print_str(int_str(math::rand() % 100)); newl();
         }
         else
         {
-            print_str("?\n");
+           print_err("Unknown command: ", false); print_str(str1); newl();
         }
 
         clear_input_buffer();
