@@ -40,6 +40,8 @@ sudo apt install gcc
     * Initial Release
 * 1.1
     * Support for real hardware
+    * CMOS support
+    * Random number generation
 
 ## Sources
 
