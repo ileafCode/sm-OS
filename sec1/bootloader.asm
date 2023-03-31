@@ -48,8 +48,8 @@ main:
 
     jmp PRG_SPACE
 
-%include "../lib/print.asm"
-%include "../lib/diskread.asm"
+%include "../sec1/print.asm"
+%include "../sec1/diskread.asm"
 
 vbe_err:
     jmp $

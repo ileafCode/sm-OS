@@ -45,6 +45,7 @@ sudo apt install gcc
 * 1.2
     * Upper and Lower string modification using string namespace
     * Scrolling screen
+    * PCI (kind of)
 
 ## Sources
 

@@ -11,7 +11,8 @@
 #include "rtc_cmos/cmos.cpp"
 #include "pci/pci.cpp"
 
-extern const char logo[];
+extern const char logo[]; // Logo comes from "logo.txt" in the build folder.
+                          // You can thank the "binaries.asm" file :)
 
 void _start()
 {
