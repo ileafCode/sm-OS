@@ -9,7 +9,6 @@ bool left_shift_pressed = false;
 bool caps_on = false;
 bool enter_pressed = false;
 bool backspace_pressed = false;
-bool cursor_en = false;
 bool kbd_en = false;
 uint_8 last_sc;
 
@@ -67,25 +66,26 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
 
 void kbd_arrow(uint_8 sc)
 {
-    if (cursor_en)
+    if (!kbd_en) return;
+    //if (5 % VGA_W <= 5) return;
+    switch (sc)
     {
-        switch (sc)
-        {
-        case 0x50: // Up
-            set_cursor_pos(cursor_pos + VGA_W);
-            break;
-        case 0x48: // Down
-            set_cursor_pos(cursor_pos - VGA_W);
-            break;
-        case 0x4D: // Right
-            set_cursor_pos(cursor_pos + 1);
-            break;
-        case 0x4B: // Left
-            set_cursor_pos(cursor_pos - 1);
-            break;
-        default:
-            break;
-        }
+    case 0x50: // Up
+        //set_cursor_pos(cursor_pos + VGA_W);
+        break;
+    case 0x48: // Down
+        //set_cursor_pos(cursor_pos - VGA_W);
+        break;
+    case 0x4D: // Right
+        buf_i++;
+        set_cursor_pos(cursor_pos + 1);
+        break;
+    case 0x4B: // Left
+        buf_i--;
+        set_cursor_pos(cursor_pos - 1);
+        break;
+    default:
+        break;
     }
 }
 

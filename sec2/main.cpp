@@ -9,56 +9,58 @@
 #include "sound/sound.cpp"
 #include "etc/string.cpp"
 #include "rtc_cmos/cmos.cpp"
+#include "pci/pci.cpp"
 
 extern const char logo[];
 
-void drawVGA();
-
 void _start()
 {
+    cli();
     clear_screen();
     set_cursor_pos(pos_coords(0, 0));
     print_str(logo);
     print_str("\n\nsm/OS v1.2\n");
+
+    mem_map_entry** usable_mem_maps = get_usable_mem_regions();
+    init_heap(0x100000, 0x100000);
     
     PIT::set_div(65535);
     PIT::init_pit();
     init_idt();
-
-    struct timeval t;
-
     main_kbd_handler = kbd_handler;
-
-    mem_map_entry** usable_mem_maps = get_usable_mem_regions();
-
-    init_heap(0x100000, 0x100000);
+    init_pci();
+    sti();
     
     //adlib::init();
     //startup_sound();
 
     print_ok("Boot successful");
-
+    //print_str(int_str(caps_on)); newl();
+    //print_str(int_str(left_shift_pressed)); newl();
+    
     while (true)
     {
+        print_str(": ");
         const char* str1 = getstr();
         str1 = string::str_lower((char*)str1);
 
         if (string::str_cmp(str1, "ping"))
         {
-          print_str("Pong!\n");
+            print_str("Pong!\n");
         }
         else if (string::str_cmp(str1, "pong"))
         {
-          print_str("Ping!\n");
+            print_str("Ping!\n");
         }
         else if (string::str_cmp(str1, "rand"))
         {
-           math::srand(cmos::now());
-           print_str(int_str(math::rand() % 100)); newl();
+            math::srand(cmos::now());
+            print_str(int_str(math::rand() % 100)); newl();
         }
+        else if (string::str_cmp(str1, (const char*)0xA)) {} // If enter pressed without a command, do nothing.
         else
         {
-           print_err("Unknown command: ", false); print_str(str1); newl();
+            print_err("Unknown command: ", false); print_str(str1); newl();
         }
 
         clear_input_buffer();

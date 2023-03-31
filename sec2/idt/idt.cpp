@@ -50,20 +50,20 @@ void init_idt()
     remap_pic();
 
     outb(PIC1_DATA, 0b11111100);
-    outb(PIC2_DATA, 0b11111111);
-
+    outb(PIC2_DATA, 0b11101111);
+    
     load_idt();
     
-    //print_ok("Initialized IDT\n");
+    //print_str("Initialized IDT\n");
 }
 
-extern "C" void pit_handler()
+extern "C" void isr0_handler()
 {
     PIT::tick();
     pic_end_master();
 }
 
-extern "C" void kbd_handler()
+extern "C" void isr1_handler()
 {
     uint_8 sc = inb(0x60);
     uint_8 chr = 0;

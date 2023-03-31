@@ -33,10 +33,7 @@ main:
     mov ds, ax
     mov es, ax
 
-    sti
-
-    ;mov ax, 01h
-    ;int 0x10
+    sti	
 
     mov [BOOT_DISK], dl
 
@@ -54,7 +51,8 @@ main:
 %include "../lib/print.asm"
 %include "../lib/diskread.asm"
 
-boot_str: db 'Booting...',0
+vbe_err:
+    jmp $
 
 times 510-($-$$) db 0
 

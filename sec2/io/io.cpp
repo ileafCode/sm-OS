@@ -73,23 +73,23 @@ void halt() { asm volatile("hlt"); } // Halt CPU
 void remap_pic()
 {
     uint_8 a1, a2;
-    a1 = inb(PIC1_DATA);
-    a2 = inb(PIC2_DATA);
+    a1 = inb(PIC1_DATA); io_wait();
+    a2 = inb(PIC2_DATA); io_wait();
 
-    outb(PIC1_CMD, ICW1_INIT | ICW1_ICW4);
-    outb(PIC2_CMD, ICW1_INIT | ICW1_ICW4);
+    outb(PIC1_CMD, ICW1_INIT | ICW1_ICW4); io_wait();
+    outb(PIC2_CMD, ICW1_INIT | ICW1_ICW4); io_wait();
 
-    outb(PIC1_DATA, 0);
-    outb(PIC2_DATA, 8);
+    outb(PIC1_DATA, 0); io_wait();
+    outb(PIC2_DATA, 8); io_wait();
 
-    outb(PIC1_DATA, 4);
-    outb(PIC2_DATA, 2);
+    outb(PIC1_DATA, 4); io_wait();
+    outb(PIC2_DATA, 2); io_wait();
 
-    outb(PIC1_DATA, ICW4_8086);
-    outb(PIC2_DATA, ICW4_8086);
+    outb(PIC1_DATA, ICW4_8086); io_wait();
+    outb(PIC2_DATA, ICW4_8086); io_wait();
 
-    outb(PIC1_DATA, a1);
-    outb(PIC2_DATA, a2);
+    outb(PIC1_DATA, a1); io_wait();
+    outb(PIC2_DATA, a2); io_wait();
 }
 
 void pic_end_master()
