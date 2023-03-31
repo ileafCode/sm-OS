@@ -4,6 +4,7 @@
 #include "../io/io.cpp"
 #include "../stdio/text_print.cpp"
 #include "../dynamic_mem/heap.cpp"
+#include "../pit/pit.cpp"
 
 struct __pci_driver;
 
@@ -98,7 +99,11 @@ void pci_probe()
                 uint_16 vendor = getVendorID(bus, slot, function);
                 if(vendor == 0xffff) continue;
                 uint_16 device = getDeviceID(bus, slot, function);
-                //print_vendor_device(vendor, device);
+                if ((vendor != 0x0086 || vendor != 0x0034) && (device != 0x0000))
+                {
+                    print_vendor_device(vendor, device);
+                    PIT::sleep_millis(600);
+                }
                 pci_device *pdev = (pci_device *)malloc(sizeof(pci_device));
                 pdev->vendor = vendor;
                 pdev->device = device;
