@@ -4,7 +4,7 @@ This is an OS that i'm working on for some education.
 
 ## Description
 
-This OS doesn't have anything useful (yet). You can only write characters and that's it.
+You can now type basic commands like "rand", "ping" and "pong".
 
 ## Getting Started
 
@@ -25,7 +25,7 @@ sudo apt install nasm
 sudo apt install gcc
 ```
 
-### Executing program
+### Build and run OS
 
 * First of all, go into the build directory of the OS.
 
