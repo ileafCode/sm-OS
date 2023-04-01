@@ -21,6 +21,7 @@ namespace kernel
     void init_kernel()
     {
         cli();
+
         clear_screen();
         set_cursor_pos(pos_coords(0, 0));
         print_str(logo);
@@ -31,12 +32,14 @@ namespace kernel
     
         PIT::set_div(65535);
         PIT::init_pit();
+
         init_idt();
         main_kbd_handler = kbd_handler;
         init_pci();
+
         sti();
 
-        beeper::beep(600, 200);
+        //print_str(int_str(1 / 0));
     }
 
     void main_kernel()
@@ -47,7 +50,7 @@ namespace kernel
     
         while (true)
         {
-            print_str(": ");
+            print_str("terminal > ");
             const char* str1 = getstr();
             str1 = string::str_lower((char*)str1);
 

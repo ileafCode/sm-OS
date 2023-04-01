@@ -28,6 +28,8 @@ idt_desc:
 [extern isr0_handler]
 [extern isr1_handler]
 
+;; Interrupts ;;
+
 isr0:
   PUSHALL
   call isr0_handler

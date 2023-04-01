@@ -47,6 +47,10 @@ sudo apt install gcc
     * Scrolling screen
     * PCI (kind of)
 
+## Pictures
+<img src="v1.0.jpg" title="v1.0">
+<img src="v1.2.jpg" title="v1.2">
+
 ## Sources
 
 1. https://wiki.osdev.org - Helped me with basically everything.

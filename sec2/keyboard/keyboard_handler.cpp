@@ -12,8 +12,8 @@ bool backspace_pressed = false;
 bool kbd_en = false;
 uint_8 last_sc;
 
-static char buffer[255];
-uint_8 buf_i;
+static char buffer[512];
+char buf_i;
 
 void standard_kbd_handler(uint_8 sc, uint_8 chr)
 {
@@ -28,11 +28,11 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         switch (sc)
         {
         case 0x0E: // Backspace
+            if (buf_i <= 0) break;
             backspace_pressed = true;
             set_cursor_pos(cursor_pos - 1);
             print_chr(' ');
             set_cursor_pos(cursor_pos - 1);
-
             buf_i -= 1;
             buffer[buf_i] = 0;
             break;
@@ -67,7 +67,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
 void kbd_arrow(uint_8 sc)
 {
     if (!kbd_en) return;
-    //if (5 % VGA_W <= 5) return;
+    
     switch (sc)
     {
     case 0x50: // Up
@@ -81,6 +81,7 @@ void kbd_arrow(uint_8 sc)
         set_cursor_pos(cursor_pos + 1);
         break;
     case 0x4B: // Left
+        if (buf_i <= 0) return;
         buf_i--;
         set_cursor_pos(cursor_pos - 1);
         break;
