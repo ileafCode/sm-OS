@@ -12,6 +12,7 @@
 #include "../etc/string.cpp"
 #include "../rtc_cmos/cmos.cpp"
 #include "../pci/pci.cpp"
+#include "parser.cpp"
 
 extern const char logo[]; // Logo comes from "logo.txt" in the build folder.
                           // You can thank the "binaries.asm" file :)
@@ -52,28 +53,7 @@ namespace kernel
         {
             print_str("terminal > ");
             const char* str1 = getstr();
-            str1 = string::str_lower((char*)str1);
-
-            if (string::str_cmp(str1, "ping"))
-            {
-                print_str("Pong!\n");
-            }
-            else if (string::str_cmp(str1, "pong"))
-            {
-                print_str("Ping!\n");
-            }
-            else if (string::str_cmp(str1, "rand"))
-            {
-                math::srand(cmos::now());
-                print_str(int_str(math::rand() % 100)); newl();
-            }
-            else if (string::str_cmp(str1, (const char*)0xA)) {} // If enter pressed without a command, do nothing.
-            else
-            {
-                print_err("Unknown command: ", false); print_str(str1); newl();
-            }
-
-            clear_input_buffer();
+            parse(str1);
         }
     }
 }
