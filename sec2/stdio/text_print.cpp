@@ -4,7 +4,7 @@
 #include "../typedefs.h"
 #include "../dynamic_mem/mem.cpp"
 
-#define VGA_MEM (unsigned char*) 0xB8000
+#define VGA_MEM (unsigned char*) 0xb8000
 #define VGA_W 80
 #define VGA_H 25
 
@@ -46,124 +46,130 @@ uint_16 cursor_pos;
 
 uint_64 default_color = BACKGROUND_BLACK | FOREGROUND_WHITE;
 
-void newl();
-
-void clear_screen(uint_64 clr_color = default_color)
-{
-    uint_64 val = 0;
-    val += clr_color << 8;
-    val += clr_color << 24;
-    val += clr_color << 40;
-    val += clr_color << 56;
-
-    for (uint_64* i = (uint_64*)VGA_MEM; i < (uint_64*)(VGA_MEM + 4000); i++)
-    {
-        *i = val;
-    }
-}
-
-void set_cursor_pos(uint_16 position)
-{
-    outb(0x3D4, 0x0F);
-    outb(0x3D5, (uint_8)(position & 0xFF));
-    outb(0x3D4, 0x0E);
-    outb(0x3D5, (uint_8)((position >> 8) & 0xFF));
-
-    cursor_pos = position;
-
-    if (cursor_pos >= (VGA_W * VGA_H))
-    {
-        clear_screen();
-        cursor_pos = 0;
-    }
-}
-
 uint_16 pos_coords(uint_8 x, uint_8 y)
 {
     return y * VGA_W + x;
 }
 
-int get_cursor_pos()
+namespace stdio
 {
-    outb(0x3D4, 14);
-    int offset = inb(0x3D5) << 8;
-    outb(0x3D4, 15);
-    offset += inb(0x3D5);
-    return offset * 2;
-}
+    void newl();
 
-void print_str(const char* str, uint_8 c = default_color)
-{
-    uint_8* char_ptr = (uint_8*)str;
-    uint_16 index = cursor_pos;
-    while (*char_ptr != 0)
+    void clear_screen(uint_64 clr_color = default_color)
     {
-        switch (*char_ptr)
+        uint_64 val = 0;
+        val += clr_color << 8;
+        val += clr_color << 24;
+        val += clr_color << 40;
+        val += clr_color << 56;
+
+        for (uint_64* i = (uint_64*)VGA_MEM; i < (uint_64*)(VGA_MEM + 4000); i++)
         {
-        case 10: // \n + \r
-            index += VGA_W;
-            index -= index % VGA_W;
-            break;
-
-        case 13: // \r
-            index -= index % VGA_W;
-            break;
-        
-        default:
-            *(VGA_MEM + index * 2) = *char_ptr;
-            *(VGA_MEM + index * 2 + 1) = c;
-            index++;
-            break;
+            *i = val;
         }
-        char_ptr++;
     }
 
-    set_cursor_pos(index);
-}
-
-void print_ok(const char* str, bool newline = true)
-{
-    print_str("[kernel]: OK | ", BACKGROUND_BLACK | FOREGROUND_GREEN);
-    print_str(str);
-
-    if (newline)
+    void set_cursor_pos(uint_16 position)
     {
-        newl();
-    }
-}
+        outb(0x3D4, 0x0F);
+        outb(0x3D5, (uint_8)(position & 0xFF));
+        outb(0x3D4, 0x0E);
+        outb(0x3D5, (uint_8)((position >> 8) & 0xFF));
 
-void print_warn(const char* str, bool newline = true)
-{
-    print_str("[kernel]: WARN | ", BACKGROUND_BLACK | FOREGROUND_YELLOW);
-    print_str(str);
+        cursor_pos = position;
+
+        if (cursor_pos >= (VGA_W * VGA_H))
+        {
+            clear_screen();
+            cursor_pos = 0;
+        }
+    }
+
+    int get_cursor_pos()
+    {
+        outb(0x3D4, 14);
+        int offset = inb(0x3D5) << 8;
+        outb(0x3D4, 15);
+        offset += inb(0x3D5);
+        return offset * 2;
+    }
+
+    void print_str(const char* str, uint_8 c = default_color)
+    {
+        uint_8* char_ptr = (uint_8*)str;
+        uint_16 index = cursor_pos;
+        while (*char_ptr != 0)
+        {
+            switch (*char_ptr)
+            {
+            case 10: // \n + \r
+                index += VGA_W;
+                index -= index % VGA_W;
+                break;
+
+            case 13: // \r
+                index -= index % VGA_W;
+                break;
+        
+            default:
+                *(VGA_MEM + index * 2) = *char_ptr;
+                *(VGA_MEM + index * 2 + 1) = c;
+                index++;
+                break;
+            }
+            char_ptr++;
+        }
+
+        set_cursor_pos(index);
+    }
+
+    void print_ok(const char* str, const char* who = "[kernel]", bool newline = true)
+    {
+        print_str(who, BACKGROUND_BLACK | FOREGROUND_GREEN);
+        print_str(": OK | ", BACKGROUND_BLACK | FOREGROUND_GREEN);
+        print_str(str);
+
+        if (newline)
+        {
+            newl();
+        }
+    }
+
+    void print_warn(const char* str, const char* who = "[kernel]", bool newline = true)
+    {
+        print_str(who, BACKGROUND_BLACK | FOREGROUND_YELLOW);
+        print_str(": WARN | ", BACKGROUND_BLACK | FOREGROUND_YELLOW);
+        print_str(str);
     
-    if (newline)
-    {
-        newl();
+        if (newline)
+        {
+            newl();
+        }
     }
-}
 
-void print_err(const char* str, bool newline = true)
-{
-    print_str("[kernel]: ERROR | ", BACKGROUND_BLACK | FOREGROUND_RED);
-    print_str(str);
-
-    if (newline)
+    void print_err(const char* str, const char* who = "[kernel]", bool newline = true)
     {
-        newl();
+        print_str(who, BACKGROUND_BLACK | FOREGROUND_RED);
+        print_str(": ERROR | ", BACKGROUND_BLACK | FOREGROUND_RED);
+        print_str(str);
+
+        if (newline)
+        {
+            newl();
+        }
     }
-}
 
-void print_chr(char chr, uint_8 c = default_color)
-{
-    *(VGA_MEM + cursor_pos * 2) = chr;   // Character to print
-    *(VGA_MEM + cursor_pos * 2 + 1) = c; // Color of the character
-    set_cursor_pos(cursor_pos+1);        // Increment the cursor position
-}
+    void print_chr(char chr, uint_8 c = default_color)
+    {
+        *(VGA_MEM + cursor_pos * 2) = chr;   // Character to print
+        *(VGA_MEM + cursor_pos * 2 + 1) = c; // Color of the character
+        set_cursor_pos(cursor_pos+1);        // Increment the cursor position
+    }
 
-void newl()
-{
-    print_str("\n");
+    void newl()
+    {
+        print_str("\n");
+    }
 }
 
 char hex_str_o[128];

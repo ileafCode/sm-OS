@@ -7,27 +7,38 @@
 #include "../math_nums/math.cpp"
 #include "../rtc_cmos/cmos.cpp"
 
-void parse(const char* input)
+void parse(char* input)
 {
-    input = string::str_lower((char*)input);
+
     if (string::str_cmp(input, "ping"))
     {
-        print_str("Pong!\n");
-    }
-    else if (string::str_cmp(input, "pong"))
-    {
-        print_str("Ping!\n");
-    }
-    else if (string::str_cmp(input, "rand"))
-    {
-        math::srand(cmos::now());
-        print_str(int_str(math::rand() % 100)); newl();
-    }
-    else if (string::str_cmp(input, (const char*)0xA)) {} // If enter pressed without a command, do nothing.
-    else
-    {
-        print_err("Unknown command: ", false); print_str(input); newl();
+        stdio::print_str("Pong!\n");
     }
 
-    clear_input_buffer();
+    else if (string::str_cmp(input, "pong"))
+    {
+        stdio::print_str("Ping!\n");
+    }
+
+    else if (string::str_cmp(input, "rand"))
+    {
+        //stdio::print_str(operand);
+        math::srand(cmos::now());
+        stdio::print_str(int_str(math::rand() % 100)); stdio::newl();
+    }
+
+    else if(string::str_cmp(input, "clr") || string::str_cmp(input, "clear"))
+    {
+        stdio::clear_screen();
+        stdio::set_cursor_pos(pos_coords(0, 0));
+    }
+
+    else if (string::str_cmp(input, (const char*)0xA)); // If enter pressed without a command, do nothing.
+
+    else
+    {
+        stdio::print_err("Unknown command: ", "[cmd]", false);
+        stdio::print_str(input);
+        stdio::newl();
+    }
 }

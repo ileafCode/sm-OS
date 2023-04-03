@@ -18,14 +18,14 @@ uint_8 usable_mem_region_count;
 
 void print_mem_map(mem_map_entry* mem_map)
 {
-    print_str("Memory Base: "); print_str(int_str(mem_map -> base_address));
-    print_str("\n");
-    print_str("Region Length: "); print_str(int_str(mem_map -> region_len));
-    print_str("\n");
-    print_str("Region Type: "); print_str(int_str(mem_map -> region_type));
-    print_str("\n");
-    print_str("Extended Attributes: "); print_str(int_str(mem_map -> ext_attr));
-    print_str("\n\n");
+    stdio::print_str("Memory Base: "); stdio::print_str(int_str(mem_map -> base_address));
+    stdio::print_str("\n");
+    stdio::print_str("Region Length: "); stdio::print_str(int_str(mem_map -> region_len));
+    stdio::print_str("\n");
+    stdio::print_str("Region Type: "); stdio::print_str(int_str(mem_map -> region_type));
+    stdio::print_str("\n");
+    stdio::print_str("Extended Attributes: "); stdio::print_str(int_str(mem_map -> ext_attr));
+    stdio::print_str("\n\n");
 }
 
 mem_map_entry** get_usable_mem_regions()

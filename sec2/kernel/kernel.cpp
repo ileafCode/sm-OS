@@ -13,20 +13,22 @@
 #include "../rtc_cmos/cmos.cpp"
 #include "../pci/pci.cpp"
 #include "parser.cpp"
+#include "../fs/fs.cpp"
+#include "../ata/ata.cpp"
 
 extern const char logo[]; // Logo comes from "logo.txt" in the build folder.
                           // You can thank the "binaries.asm" file :)
 
 namespace kernel
 {
+    const char* kernel_version = "v1.2";
+
     void init_kernel()
     {
-        cli();
-
-        clear_screen();
-        set_cursor_pos(pos_coords(0, 0));
-        print_str(logo);
-        print_str("\n\nsm/OS v1.2\n");
+        stdio::clear_screen();
+        stdio::set_cursor_pos(pos_coords(0, 0));
+        stdio::print_str(logo);
+        stdio::print_str("\n\nsm/OS "); stdio::print_str(kernel_version); stdio::newl();
 
         mem_map_entry** usable_mem_maps = get_usable_mem_regions();
         init_heap(0x100000, 0x100000);
@@ -38,22 +40,19 @@ namespace kernel
         main_kbd_handler = kbd_handler;
         init_pci();
 
-        sti();
-
-        //print_str(int_str(1 / 0));
+        ata_lba_read();
     }
 
     void main_kernel()
     {
-        print_ok("Boot successful");
-        //print_str(int_str(caps_on)); newl();
-        //print_str(int_str(left_shift_pressed)); newl();
-    
+        stdio::print_ok("Boot successful");
+        
         while (true)
         {
-            print_str("terminal > ");
-            const char* str1 = getstr();
+            stdio::print_str("shell > ");
+            char* str1 = stdio::getstr();
             parse(str1);
+            stdio::clear_input_buffer();
         }
     }
 }

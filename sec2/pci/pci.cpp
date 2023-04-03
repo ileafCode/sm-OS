@@ -81,11 +81,11 @@ uint_16 getSubClassId(uint_16 bus, uint_16 device, uint_16 function)
 
 void print_vendor_device(uint_16 vendor, uint_16 device)
 {
-    print_str("vendor: 0x");
-    print_str(hex_str(vendor)); newl();
+    stdio::print_str("vendor: 0x");
+    stdio::print_str(hex_str(vendor)); stdio::newl();
 
-    print_str("device: 0x");
-    print_str(hex_str(device)); newl();
+    stdio::print_str("device: 0x");
+    stdio::print_str(hex_str(device)); stdio::newl();
 }
 
 void pci_probe()
@@ -143,17 +143,17 @@ void pci_register_driver(pci_driver *driv)
 
 void print_dump(uint_16 vendor, uint_16 device, uint_16 func, const char* name)
 {
-    print_str("vendor: 0x");
-    print_str(hex_str(vendor)); newl();
+    stdio::print_str("vendor: 0x");
+    stdio::print_str(hex_str(vendor)); stdio::newl();
 
-    print_str("device: 0x");
-    print_str(hex_str(device)); newl();
+    stdio::print_str("device: 0x");
+    stdio::print_str(hex_str(device)); stdio::newl();
 
-    print_str("func: 0x");
-    print_str(hex_str(func)); newl();
+    stdio::print_str("func: 0x");
+    stdio::print_str(hex_str(func)); stdio::newl();
 
-    print_str("name: ");
-    print_str(name); newl();
+    stdio::print_str("name: ");
+    stdio::print_str(name); stdio::newl();
 }
 
 void pci_proc_dump(uint_8 *buffer)

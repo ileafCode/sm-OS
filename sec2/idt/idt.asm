@@ -49,3 +49,5 @@ load_idt:
   sti
   ret
   GLOBAL load_idt
+
+%include "../sec2/ata/ata.asm"

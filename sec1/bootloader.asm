@@ -3,9 +3,8 @@
 
 boot:
     jmp main
-    TIMES 3-($-$$) DB 0x90   ; Support 2 or 3 byte encoded JMPs before BPB.
+    TIMES 3-($-$$) DB 0x90
 
-    ; Dos 4.0 EBPB 1.44MB floppy
     OEMname:           db    "mkfs.fat"  ; mkfs.fat is what OEMname mkdosfs uses
     bytesPerSector:    dw    512
     sectPerCluster:    db    1
@@ -23,8 +22,8 @@ boot:
     reserved:          db    0
     signature:         db    0x29
     volumeID:          dd    0x2d7e5a1a
-    volumeLabel:       db    "NO NAME    "
-    fileSysType:       db    "FAT12   "
+    volumeLabel:       db    "SM/OS      "
+    fileSysType:       db    "FAT16   "
 
 main:
     cli
@@ -33,7 +32,10 @@ main:
     mov ds, ax
     mov es, ax
 
-    sti	
+    sti
+
+    ;mov ax, 13h
+    ;int 0x10
 
     mov [BOOT_DISK], dl
 
@@ -50,9 +52,6 @@ main:
 
 %include "../sec1/print.asm"
 %include "../sec1/diskread.asm"
-
-vbe_err:
-    jmp $
 
 times 510-($-$$) db 0
 

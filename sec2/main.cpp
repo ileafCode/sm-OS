@@ -5,5 +5,5 @@ void _start()
     kernel::init_kernel();
     kernel::main_kernel();
 
-    for (;;); // Endless loop.
+    for (;;); // Endless loop. Just in case!
 }

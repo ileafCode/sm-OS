@@ -21,7 +21,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
     {   
         buffer[buf_i] = chr;
         buf_i++;
-        print_chr(chr);
+        stdio::print_chr(chr);
     }
     else
     {
@@ -30,15 +30,15 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         case 0x0E: // Backspace
             if (buf_i <= 0) break;
             backspace_pressed = true;
-            set_cursor_pos(cursor_pos - 1);
-            print_chr(' ');
-            set_cursor_pos(cursor_pos - 1);
+            stdio::set_cursor_pos(cursor_pos - 1);
+            stdio::print_chr(' ');
+            stdio::set_cursor_pos(cursor_pos - 1);
             buf_i -= 1;
             buffer[buf_i] = 0;
             break;
         
         case 0x0F: // Tab
-            print_str("    ");
+            stdio::print_str("    ");
             break;
         
         case 0x2A: // Left Shift
@@ -51,7 +51,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         
         case 0x1C: // Enter
             enter_pressed = true;
-            newl();
+            stdio::newl();
             buf_i = 0;
             break;
         
@@ -78,12 +78,12 @@ void kbd_arrow(uint_8 sc)
         break;
     case 0x4D: // Right
         buf_i++;
-        set_cursor_pos(cursor_pos + 1);
+        stdio::set_cursor_pos(cursor_pos + 1);
         break;
     case 0x4B: // Left
         if (buf_i <= 0) return;
         buf_i--;
-        set_cursor_pos(cursor_pos - 1);
+        stdio::set_cursor_pos(cursor_pos - 1);
         break;
     default:
         break;

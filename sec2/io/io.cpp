@@ -33,6 +33,11 @@ void outl(uint_16 port, uint_64 value)
     asm volatile ("outl %%eax,%%edx": :"dN"(port), "a"(value));
 }
 
+void outpsm(uint_16 port, uint_8* data, uint_64 size)
+{
+	asm volatile ("rep outsw" : "+S" (data), "+c" (size) : "d" (port));
+}
+
 uint_8 inb(uint_16 port)
 {
     uint_8 ret_val;
@@ -58,6 +63,20 @@ uint_64 inl(uint_16 port)
     : "=a"(ret_val)
     : "Nd"(port));
     return ret_val;
+}
+
+void inpsm(uint_16 port, uint_8* data, uint_64 size)
+{
+	asm volatile ("rep insw" : "+D" (data), "+c" (size) : "d" (port) : "memory");
+}
+
+void insl(unsigned reg, unsigned int *buffer, int quads)
+{
+    int index;
+    for(index = 0; index < quads; index++)
+    {
+        buffer[index] = inl(reg);
+    }
 }
 
 void io_wait()
