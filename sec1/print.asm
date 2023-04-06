@@ -21,3 +21,28 @@ print:
     print_string_end:
     popa
     ret
+
+print_hex:
+    mov cx, 4	; offset in string, counter (4 hex characters)
+    .hex_loop:
+        mov ax, dx	              ; Hex word passed in DX
+        and al, 0Fh               ; Use nibble in AL
+        mov bx, hex_to_ascii
+        xlatb                     ; AL = [DS:BX + AL]
+
+        mov bx, cx                ; Need bx to index data
+        mov [hexString+bx+1], al  ; Store hex char in string
+        ror dx, 4                 ; Get next nibble
+    loop .hex_loop 
+
+    mov si, hexString             ; Print out hex string
+    mov ah, 0Eh
+    mov cx, 6                     ; Length of string
+    .loop:
+        lodsb
+        int 10h
+    loop .loop
+    ret
+
+hexString: db '0x0000'
+hex_to_ascii: db '0123456789ABCDEF'

@@ -39,13 +39,21 @@ namespace kernel
         init_idt();
         main_kbd_handler = kbd_handler;
         init_pci();
-
-        ata_lba_read();
     }
 
     void main_kernel()
     {
         stdio::print_ok("Boot successful");
+        // uint_8 *t;
+        // read_sectors_ATA_PIO(t, 0x0, 1);
+
+        // for (int i = 0; i < 128; i++)
+        // {
+        //     stdio::print_str(hex_str(t[i])); stdio::print_str(" ");
+        //     if (i % 16 == 0) if (i != 0) stdio::newl();
+        // }
+
+        //stdio::newl();
         
         while (true)
         {

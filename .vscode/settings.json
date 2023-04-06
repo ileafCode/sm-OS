@@ -15,6 +15,7 @@
         "cinttypes": "cpp",
         "cstdint": "cpp",
         "typeinfo": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "functional": "cpp"
     }
 }

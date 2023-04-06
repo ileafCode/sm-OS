@@ -93,23 +93,9 @@ namespace string
         return res;
     }
 
-    char* get_first_word(char* str)
-    {
-        uint_16 i = 0;
-        char* res = 0;
-
-        while (str[i] != ' ' && str[i] != 0)
-        {
-            res[i] = str[i];
-            i++;
-        }
-
-        return res;
-    }
-
     char* str_tok(char* str, const char* delim)
     {
-        static char* last_token = NULL;
+        char* last_token = NULL;
         char* token = NULL;
 
         if (str != NULL)
@@ -122,12 +108,15 @@ namespace string
         }
 
         token = last_token;
-        while (*last_token != '\0') {
-            for (const char* d = delim; *d != '\0'; ++d) {
-                if (*last_token == *d) {
+        while (*last_token != '\0')
+        {
+            for (const char* d = delim; *d != '\0'; ++d)
+            {
+                if (*last_token == *d)
+                {
                     *last_token = '\0';
                     last_token++;
-                 return token;
+                    return token;
                 }
             }
             last_token++;
@@ -145,6 +134,16 @@ namespace string
         }
         return nullptr;
     }
+
+    void str_cpy(char *str1, char* str2)
+    {
+        int n = str_len(str2);
+        for (int i = 0; i <= n; i++)
+        {
+            str1[i] = str2[i];
+        }
+    }
+
 
     uint_64 str_int(const char* input)
     {
@@ -165,6 +164,22 @@ namespace string
         return i;
     }
 
+    uint_64 str_backspace(char* str, char c)
+    {
+	    uint_64 i = str_len(str);
+	    i--;
+	    while(i)
+	    {
+		    i--;
+		    if(str[i] == c)
+		    {
+			    str[i + 1] = 0;
+			    return 1;
+		    }
+	    }
+	    return 0;
+    }
+
     uint_64 str_split(char* str, char delim)
     {
 	    uint_64 n = 0;
@@ -180,21 +195,5 @@ namespace string
 	    }
 	    n++;
 	    return n;
-    }
-
-    uint_64 str_backspace(char* str, char c)
-    {
-	    uint_64 i = str_len(str);
-	    i--;
-	    while(i)
-	    {
-		    i--;
-		    if(str[i] == c)
-		    {
-			    str[i+1] = 0;
-			    return 1;
-		    }
-	    }
-	    return 0;
     }
 }

@@ -1,8 +1,4 @@
 
-mov ah, 0x0e
-mov al, 'i'
-int 0x10
-
 jmp prot_mode
 
 %include "../sec2/asm/gdt.asm"
@@ -36,11 +32,6 @@ start_prot_mode:
   mov es, ax
   mov fs, ax
   mov gs, ax
-
-  mov [0xB8000], byte 'Y'
-  mov [0xB8002], byte 'E'
-  mov [0xB8004], byte 'S'
-  mov [0xB8006], byte '!'
 
   call get_cpuid
   call get_long_mode

@@ -42,10 +42,6 @@ main:
     mov bp, 0x7c00
     mov sp, bp
 
-    mov ah, 0x0e
-    mov al, 'H'
-    int 0x10
-
     call read_disk
 
     jmp PRG_SPACE

@@ -201,7 +201,6 @@ char int_str_o[128];
 template<typename T>
 const char* int_str(T val)
 {
-
 	uint_8 isNegative = 0;
 
 	if (val < 0) {
@@ -232,7 +231,8 @@ const char* int_str(T val)
 }
 
 char float_str_o[128];
-const char* float_str(float value, uint_8 decimalPlaces = 4) {
+const char* float_str(float value, uint_8 decimalPlaces = 4)
+{
 	char* intPtr = (char*)int_str((int)value);
 	char* floatPtr = float_str_o;
 
@@ -260,4 +260,22 @@ const char* float_str(float value, uint_8 decimalPlaces = 4) {
 	*floatPtr = 0;
 
 	return float_str_o;
+}
+
+char bin_str_o[64];
+template<typename T>
+const char* bin_str(T val)
+{
+    uint_16 size_val = sizeof(val);
+    size_val *= 8;
+    
+    for (int i = size_val; i >= 0; i--)
+    {
+        uint_64 mask = 1 << i;
+
+        if (val & mask) bin_str_o[size_val - i] = '1';  
+        else bin_str_o[size_val - i] = '0';
+    }
+
+    return bin_str_o;
 }
