@@ -33,9 +33,9 @@ main:
     mov es, ax
 
     sti
-
-    ;mov ax, 13h
-    ;int 0x10
+    
+    mov ax, 13h
+    int 0x10
 
     mov [BOOT_DISK], dl
 

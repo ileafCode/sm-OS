@@ -4,6 +4,7 @@
 #include "../stdio/text_print.cpp"
 #include "../etc/string.cpp"
 #include "../dynamic_mem/heap.cpp"
+#include "../gfx_13h/gfx.cpp"
 
 bool left_shift_pressed = false;
 bool caps_on = false;
@@ -21,7 +22,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
     {   
         buffer[buf_i] = chr;
         buf_i++;
-        stdio::print_chr(chr);
+        gfx::print_chr(chr);
     }
     else
     {
@@ -29,10 +30,9 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         {
         case 0x0E: // Backspace
             if (buf_i <= 0) break;
-            backspace_pressed = true;
-            stdio::set_cursor_pos(cursor_pos - 1);
-            stdio::print_chr(' ');
-            stdio::set_cursor_pos(cursor_pos - 1);
+            gfx::char_cols -= 8;
+            gfx::print_chr('\0', 0x13);
+            gfx::char_cols -= 8;
             buf_i -= 1;
             buffer[buf_i] = 0;
             break;
@@ -51,7 +51,7 @@ void standard_kbd_handler(uint_8 sc, uint_8 chr)
         
         case 0x1C: // Enter
             enter_pressed = true;
-            stdio::newl();
+            gfx::newl();
             buf_i = 0;
             break;
         

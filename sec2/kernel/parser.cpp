@@ -21,38 +21,37 @@ void parse(char* input)
 
     if (string::str_cmp(command, "ping"))
     {
-        stdio::print_str("Pong!\n");
+        gfx::print_str("Pong!\n");
     }
 
     else if (string::str_cmp(command, "pong"))
     {
-        stdio::print_str("Ping!\n");
+        gfx::print_str("Ping!\n");
     }
 
     else if (string::str_cmp(command, "rand"))
     {
         int rand_md = string::str_int(args);
         math::srand(cmos::now());
-        stdio::print_str(int_str(math::rand() % rand_md)); stdio::newl();
+        gfx::print_str(int_str(math::rand() % rand_md)); gfx::newl();
     }
 
     else if(string::str_cmp(command, "clr") || string::str_cmp(command, "clear"))
     {
-        stdio::clear_screen();
-        stdio::set_cursor_pos(pos_coords(0, 0));
+        gfx::clear_screen();
     }
 
     else if (string::str_cmp(command, "print"))
     {
-        stdio::print_str(args); stdio::newl();
+        gfx::print_str(args); gfx::newl();
     }
 
     else if (string::str_cmp(command, (const char*)0xA)); // If enter pressed without a command, do nothing.
 
     else
     {
-        stdio::print_err("Unknown command: ", "[cmd]", false);
-        stdio::print_str(command);
-        stdio::newl();
+        gfx::print_err("Unknown command: ", "[cmd]", false);
+        gfx::print_str(command);
+        gfx::newl();
     }
 }

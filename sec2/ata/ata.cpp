@@ -5,7 +5,6 @@
 #include "../dynamic_mem/heap.cpp"
 #include "../stdio/text_print.cpp"
 #include "../pit/pit.cpp"
-#include "ata_stuff.h"
 #include "../kernel/kernel_func.cpp"
 
 #define STATUS_BSY 0x80
@@ -24,14 +23,13 @@ void read_sectors_ATA_PIO(uint_8* target_address, uint_32 LBA, uint_8 sector_cou
 	outb(0x1F3, (uint_8) LBA);
 	outb(0x1F4, (uint_8)(LBA >> 8));
 	outb(0x1F5, (uint_8)(LBA >> 16)); 
-	outb(0x1F7,0x20); //Send the read command
+	outb(0x1F7,0x20);
 
-	for (int j =0;j<sector_count;j++)
+	for (int j = 0;j < sector_count; j++)
 	{
 		ATA_wait_BSY();
 		ATA_wait_DRQ();
-		for(int i=0;i<256;i++)
-			target_address[i] = inw(0x1F0);
+		for(int i=0;i<256;i++) target_address[i] = inw(0x1F0);
 		target_address+=256;
 	}
 }
@@ -46,7 +44,7 @@ void write_sectors_ATA_PIO(uint_32 LBA, uint_8 sector_count, uint_32* bytes)
 	outb(0x1F5, (uint_8)(LBA >> 16)); 
 	outb(0x1F7,0x30);
 
-	for (int j =0;j<sector_count;j++)
+	for (int j =0;j < sector_count; j++)
 	{
 		ATA_wait_BSY();
 		ATA_wait_DRQ();
