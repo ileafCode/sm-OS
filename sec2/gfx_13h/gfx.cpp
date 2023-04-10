@@ -7,19 +7,35 @@
 #include "../dynamic_mem/heap.cpp"
 #include "../dynamic_mem/mem.cpp"
 
-#define GFX_MEM (unsigned char*) 0xA0000
+#define GFX_MEM (unsigned short*) 0xA0000
 
 #define GFX_W 320
 #define GFX_H 200
 #define GFX_PX_SIZE (GFX_W * GFX_H)
 
+#define TILE_SIZE 16
+#define ICON_SIZE  8
+
 uint_8* BFR = 0;
 
 namespace gfx
 {
-    void clear_screen(uint_8 clear_color = 0x13)
+    uint_8 fgc = 0x0F;
+    uint_8 bgc = 0x13;
+
+    uint_16 char_cols = 0;
+    uint_16 char_rows = 1;
+
+    void clear_screen(uint_8 clear_color = bgc)
     {
         for (int i = 0; i < (GFX_PX_SIZE); i++) BFR[i] = clear_color;
+        char_cols = 0;
+        char_rows = 1;
+    }
+
+    void flip()
+    {
+        memcpy(GFX_MEM, BFR, GFX_PX_SIZE);
     }
 
     void init_db(uint_8* bfr)
@@ -39,13 +55,39 @@ namespace gfx
         *(BFR + pos_coords(x, y)) = color;
     }
 
+    void icon(uint_16 x, uint_16 y, uint_8 icon[ICON_SIZE])
+    {
+        int i = 0;
+        for (int yy = y; yy < y + ICON_SIZE; yy++)
+        {
+            for (int xx = x; xx < x + ICON_SIZE; xx++)
+            {
+                putpix(yy, xx, icon[i]);
+                i++;
+            }
+        }
+    }
+
+    void tile(uint_16 x, uint_16 y, uint_8 tile[TILE_SIZE * TILE_SIZE])
+    {
+        int i = 0;
+        for (int yy = y; yy < y + TILE_SIZE; yy++)
+        {
+            for (int xx = x; xx < x + TILE_SIZE; xx++)
+            {
+                putpix(xx, yy, tile[i]);
+                i++;
+            }
+        }
+    }
+
     void square(uint_16 x, uint_16 y, uint_16 size_x, uint_16 size_y, uint_8 color)
     {
         for (int yy = y; yy < y + size_y; yy++)
         {
             for (int xx = x; xx < x + size_x; xx++)
             {
-                putpix(yy, xx, color);
+                putpix(xx, yy, color);
             }
         }
     }
@@ -81,51 +123,85 @@ namespace gfx
         }
     }
 
-    void flip()
-    {
-        memcpy(GFX_MEM, BFR, GFX_PX_SIZE);
-    }
-
-    uint_16 char_cols = 1;
-    uint_16 char_rows = 1;
-
     void newl()
     {
         char_rows += 8;
-        char_cols =  1;
+        char_cols =  0;
     }
 
-    void print_chr(char chr, uint_8 color = 0x0F)
+    void print_chr(char chr, uint_8 color = fgc, bool flip_s = true)
     {
-        uint_8* glyph = font[(size_t) chr];
+        uint_8* glyph = font_6x8[(size_t) chr];
 
         if (chr == 0)
         {
             for (size_t yy = 0; yy < 8; yy++)
-                for (size_t xx = 0; xx < 8; xx++)
-                    putpix(char_cols + xx, char_rows + yy, 0x13);
+                for (size_t xx = 0; xx < 6; xx++)
+                    putpix(char_cols + xx, char_rows + yy, bgc);
         }
 
-        for (size_t yy = 0; yy < 8; yy++)
+        for (size_t yy = 0; yy < 6; yy++)
             for (size_t xx = 0; xx < 8; xx++)
                 if (glyph[yy] & (1 << xx))
-                    putpix(char_cols + xx, char_rows + yy, color);
+                    putpix(char_cols + yy, char_rows + xx, color);
         
-        char_cols += 8;
-        if (char_cols > 320)
+        char_cols += 6;
+        if (char_cols > GFX_W)
         {
             newl();
         }
-        if (char_rows > 200)
+        if (char_rows > GFX_H)
         {
-            clear_screen();
             char_rows = 1;
             char_cols = 1;
+            clear_screen();
         }
-        flip();
+        if (flip_s) flip();
     }
 
-    void print_str(const char* str, uint_8 color = 15)
+    uint_16 last_cols;
+    uint_16 last_rows;
+
+    void print_chr_xy(char chr, uint_16 x = char_cols, uint_16 y = char_rows, uint_8 color = fgc, bool flip_s = true)
+    {
+        last_cols = char_cols;
+        last_rows = char_rows;
+
+        char_cols = x;
+        char_rows = y;
+
+        uint_8* glyph = font_6x8[(size_t) chr];
+
+        if (chr == 0)
+        {
+            for (size_t yy = 0; yy < 8; yy++)
+                for (size_t xx = 0; xx < 6; xx++)
+                    putpix(char_cols + xx, char_rows + yy, bgc);
+        }
+
+        for (size_t yy = 0; yy < 6; yy++)
+            for (size_t xx = 0; xx < 8; xx++)
+                if (glyph[yy] & (1 << xx))
+                    putpix(char_cols + yy, char_rows + xx, color);
+        
+        char_cols += 6;
+        if (char_cols > GFX_W)
+        {
+            newl();
+        }
+        if (char_rows > GFX_H)
+        {
+            char_rows = 1;
+            char_cols = 1;
+            clear_screen();
+        }
+        if (flip_s) flip();
+
+        char_cols = last_cols;
+        char_rows = last_rows;
+    }
+
+    void print_str(const char* str, uint_8 color = fgc)
     {
         int i = 0;
         while (str[i] != 0)
@@ -136,11 +212,34 @@ namespace gfx
                 newl();
 
             default:
-                print_chr(str[i], color);
+                print_chr(str[i], color, false);
                 i++;
                 break;
             }
         }
+
+        flip();
+    }
+
+    void print_str_xy(const char* str, uint_16 x = char_cols, uint_16 y = char_rows, uint_8 color = fgc)
+    {
+        int i = 0;
+        while (str[i] != 0)
+        {
+            switch (str[i])
+            {
+            case '\n':
+                newl();
+
+            default:
+                print_chr_xy(str[i], x, y, color, false);
+                x += 6;
+                i++;
+                break;
+            }
+        }
+
+        //flip();
     }
 
     void print_ok(const char* str, const char* who = "[kernel]", bool newline = true)

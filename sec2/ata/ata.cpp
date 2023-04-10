@@ -44,7 +44,7 @@ void write_sectors_ATA_PIO(uint_32 LBA, uint_8 sector_count, uint_32* bytes)
 	outb(0x1F5, (uint_8)(LBA >> 16)); 
 	outb(0x1F7,0x30);
 
-	for (int j =0;j < sector_count; j++)
+	for (int j = 0; j < sector_count; j++)
 	{
 		ATA_wait_BSY();
 		ATA_wait_DRQ();
@@ -59,6 +59,7 @@ static void ATA_wait_BSY()
 {
 	while(inb(0x1F7)&STATUS_BSY);
 }
+
 static void ATA_wait_DRQ()
 {
 	while(!(inb(0x1F7)&STATUS_RDY));

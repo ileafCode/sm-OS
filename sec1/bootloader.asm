@@ -3,7 +3,7 @@
 
 boot:
     jmp main
-    TIMES 3-($-$$) DB 0x90
+    times 3-($-$$) DB 0x90
 
     OEMname:           db    "mkfs.fat"  ; mkfs.fat is what OEMname mkdosfs uses
     bytesPerSector:    dw    512
@@ -22,7 +22,7 @@ boot:
     reserved:          db    0
     signature:         db    0x29
     volumeID:          dd    0x2d7e5a1a
-    volumeLabel:       db    "SM/OS      "
+    volumeLabel:       db    "NO NAME    "
     fileSysType:       db    "FAT16   "
 
 main:
@@ -33,9 +33,6 @@ main:
     mov es, ax
 
     sti
-    
-    mov ax, 13h
-    int 0x10
 
     mov [BOOT_DISK], dl
 
@@ -43,6 +40,9 @@ main:
     mov sp, bp
 
     call read_disk
+
+    mov ax, 0x0013
+    int 0x10
 
     jmp PRG_SPACE
 

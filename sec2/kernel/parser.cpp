@@ -6,6 +6,8 @@
 #include "../stdio/input.cpp"
 #include "../math_nums/math.cpp"
 #include "../rtc_cmos/cmos.cpp"
+#include "../ata/ata.cpp"
+#include "gametest.cpp"
 
 void parse(char* input)
 {
@@ -21,12 +23,12 @@ void parse(char* input)
 
     if (string::str_cmp(command, "ping"))
     {
-        gfx::print_str("Pong!\n");
+        gfx::print_str("Pong!"); gfx::newl();
     }
 
     else if (string::str_cmp(command, "pong"))
     {
-        gfx::print_str("Ping!\n");
+        gfx::print_str("Ping!"); gfx::newl();
     }
 
     else if (string::str_cmp(command, "rand"))
@@ -46,7 +48,35 @@ void parse(char* input)
         gfx::print_str(args); gfx::newl();
     }
 
-    else if (string::str_cmp(command, (const char*)0xA)); // If enter pressed without a command, do nothing.
+    else if (string::str_cmp(command, "game1"))
+    {
+        game1::loop();
+        gfx::clear_screen();
+    }
+    
+    else if (string::str_cmp(command, "txt"))
+    {
+        while (!esc_pressed)
+        {
+            stdio::getstr();
+            stdio::clear_input_buffer();
+        }
+        esc_pressed = false;
+    }
+
+    else if (string::str_cmp(command, "wait")) 
+    {
+        int delay_ms = string::str_int(args);
+        PIT::sleep_millis(delay_ms);
+    }
+
+    else if (string::str_cmp(command, "game2"))
+    {
+        game2::loop();
+        gfx::clear_screen();
+    }
+
+    else if (string::str_cmp(command, (const char*)0)); // If enter pressed without a command, do nothing.
 
     else
     {

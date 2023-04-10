@@ -25,21 +25,21 @@ idt_desc:
 
   %endmacro
 
-[extern isr0_handler]
-[extern isr1_handler]
+[extern pit_handler]
+[extern kbd_handler]
 
 ;; Interrupts ;;
 
 isr0:
   PUSHALL
-  call isr0_handler
+  call pit_handler
   POPALL
   iretq
   GLOBAL isr0
 
 isr1:
   PUSHALL
-  call isr1_handler
+  call kbd_handler
   POPALL
   iretq
   GLOBAL isr1

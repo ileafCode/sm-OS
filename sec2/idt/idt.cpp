@@ -38,9 +38,6 @@ void init_idt()
     make_interrupt((uint_64)&isr1, IDT_int_gate, 1); // Keyboard interrupt
 
     remap_pic();
-
-    outb(PIC1_DATA, 0b11111100);
-    outb(PIC2_DATA, 0b11111111);
     
     load_idt();
     
@@ -58,13 +55,13 @@ void make_interrupt(uint_64 func, uint_8 type_attr, uint_8 num)
 	_idt[num].selector = 0x08;
 }
 
-extern "C" void isr0_handler()
+extern "C" void pit_handler()
 {
     PIT::tick();
     pic_end_master();
 }
 
-extern "C" void isr1_handler()
+extern "C" void kbd_handler()
 {
     uint_8 sc = inb(0x60);
     uint_8 chr = 0;

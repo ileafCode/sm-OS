@@ -46,6 +46,7 @@ sudo apt install gcc
     * Upper and Lower string modification using string namespace
     * Scrolling screen
     * PCI (kind of)
+    * Graphics (320x200, 256 colors)
 
 ## Pictures
 <img src="v1.0.jpg" title="v1.0">

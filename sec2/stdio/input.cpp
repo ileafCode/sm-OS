@@ -15,11 +15,27 @@ namespace stdio
 
     char* getstr()
     {
+        buf_en = true;
         kbd_en = true;
         while (enter_pressed == false);
         kbd_en = false;
+        buf_en = false;
+        
         enter_pressed = false;
 
-        return buffer;
+        return (char*)buffer;
+    }
+
+    char getch()
+    {
+        char chr = 0;
+        kbd_en = true;
+        print_kbd = false;
+        while (last_ch == 0);
+        chr = last_ch;
+        print_kbd = true;
+        kbd_en = false;
+        last_ch = 0;
+        return chr;
     }
 }
