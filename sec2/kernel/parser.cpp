@@ -7,13 +7,15 @@
 #include "../math_nums/math.cpp"
 #include "../rtc_cmos/cmos.cpp"
 #include "../ata/ata.cpp"
-#include "gametest.cpp"
+#include "game1.cpp"
+#include "game2.cpp"
 
 void parse(char* input)
 {
     char* inp_1 = 0;
     string::str_cpy(inp_1, input);
     char* command = string::str_tok(input, " ");
+    command = string::str_lower(command);
 
     char* args = 0;
     for (int i = 0; i < string::str_len(inp_1); i++)
@@ -53,6 +55,12 @@ void parse(char* input)
         game1::loop();
         gfx::clear_screen();
     }
+
+    else if (string::str_cmp(command, "game2"))
+    {
+        game2::loop();
+        gfx::clear_screen();
+    }
     
     else if (string::str_cmp(command, "txt"))
     {
@@ -68,12 +76,6 @@ void parse(char* input)
     {
         int delay_ms = string::str_int(args);
         PIT::sleep_millis(delay_ms);
-    }
-
-    else if (string::str_cmp(command, "game2"))
-    {
-        game2::loop();
-        gfx::clear_screen();
     }
 
     else if (string::str_cmp(command, (const char*)0)); // If enter pressed without a command, do nothing.

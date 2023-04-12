@@ -27,6 +27,9 @@ idt_desc:
 
 [extern pit_handler]
 [extern kbd_handler]
+[extern ata_handler]
+
+[extern div0_handler]
 
 ;; Interrupts ;;
 
@@ -43,6 +46,20 @@ isr1:
   POPALL
   iretq
   GLOBAL isr1
+
+isr14:
+  PUSHALL
+  call ata_handler
+  POPALL
+  iretq
+  GLOBAL isr14
+
+div0:
+  PUSHALL
+  call div0_handler
+  POPALL
+  iretq
+  GLOBAL div0
 
 load_idt:
   lidt [idt_desc]

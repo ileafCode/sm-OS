@@ -6,6 +6,14 @@ namespace math
 {
     uint_64 seed = 0;
     const float PI = 3.14159;
+
+    typedef struct
+    {
+        int x;
+        int y;
+    } point;
+    
+
     double deg_rad(double degree)
     {
         return degree*PI/180;
@@ -77,6 +85,35 @@ namespace math
             n -= 1.0;
         }
         return result;
+    }
+
+    double sin(double x)
+    {
+        double sum = 0;
+        for (int n = 0; n <= 10; n++) {
+            sum += pow(-1, n) * pow(x, 2*n+1) / fact(2*n+1);
+        }
+        return sum;
+    }
+
+    double cos(double x)
+    {
+        double sum = 0;
+        for (int n = 0; n <= 10; n++) {
+            sum += pow(-1, n) * pow(x, 2*n) / fact(2*n);
+        }
+        return sum;
+    }
+
+    double tan(double x)
+    {
+        double sum = 0;
+        double term = x;
+        for (int n = 1; n <= 10; n++) {
+            sum += term;
+            term = pow(-1, n) * 2 * pow(x, 2*n+1) / fact(2*n+1);
+        }
+        return sum;
     }
 
     double ceil(double x)

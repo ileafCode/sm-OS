@@ -18,7 +18,7 @@ static void ATA_wait_DRQ();
 void read_sectors_ATA_PIO(uint_8* target_address, uint_32 LBA, uint_8 sector_count)
 {
 	ATA_wait_BSY();
-	outb(0x1F6,0xE0 | ((LBA >>24) & 0xF));
+	outb(0x1F6,0xE0 | ((LBA >> 24) & 0xF));
 	outb(0x1F2,sector_count);
 	outb(0x1F3, (uint_8) LBA);
 	outb(0x1F4, (uint_8)(LBA >> 8));

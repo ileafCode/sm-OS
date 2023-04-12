@@ -19,6 +19,8 @@
 #include "../gfx_13h/icons.h"
 #include "../acpi/acpi.cpp"
 
+extern uint_8 picture[];
+
 namespace kernel
 {
     const char* kernel_version = "v1.2";
@@ -32,16 +34,14 @@ namespace kernel
         PIT::init_pit();
 
         init_idt();
-        outb(PIC1_DATA, 0b11111000); // Bit masking, just in case!
-        outb(PIC2_DATA, 0b11101111);
 
         main_kbd_handler = kbd_handler;
-        //init_pci();
+        init_pci();
     }
 
     void main_kernel()
     {
-        gfx::init_db((uint_8*) malloc(64000));
+        gfx::init_db((uint_8*) malloc(GFX_PX_SIZE));
 
         gfx::clear_screen();
         gfx::print_str("sm/OS "); gfx::print_str(kernel_version); gfx::newl();
@@ -51,7 +51,7 @@ namespace kernel
         
         while (true)
         {
-            gfx::print_str("shell > ");
+            gfx::print_str("> ");
             char* str1 = stdio::getstr();
             parse(str1);
             stdio::clear_input_buffer();

@@ -5,6 +5,7 @@
 #include "../keyboard/kbd_sc_set_1.h"
 #include "../keyboard/keyboard_handler.cpp"
 #include "../pit/pit.cpp"
+#include "../kernel/kernel_func.cpp"
 
 #define IDT_int_gate  0b10001110
 #define IDT_call_gate 0b10001100
@@ -12,6 +13,10 @@
 
 extern uint_64 isr0;
 extern uint_64 isr1;
+
+extern uint_64 isr14;
+
+extern uint_64 div0;
 
 extern "C" void load_idt();
 
@@ -36,8 +41,11 @@ void init_idt()
     // --- Interrupts --- //
     make_interrupt((uint_64)&isr0, IDT_int_gate, 0); // PIT interrupt
     make_interrupt((uint_64)&isr1, IDT_int_gate, 1); // Keyboard interrupt
+    make_interrupt((uint_64)&isr14, IDT_int_gate, 14); // ATA1 interrupt
 
     remap_pic();
+    outb(PIC1_DATA, 0b11111000);
+    outb(PIC2_DATA, 0b11101111);
     
     load_idt();
     
@@ -53,6 +61,11 @@ void make_interrupt(uint_64 func, uint_8 type_attr, uint_8 num)
 	_idt[num].offset_high = (uint_32)(((uint_64)func & 0xffffffff00000000) >> 32);
 	_idt[num].ist = 0;
 	_idt[num].selector = 0x08;
+}
+
+extern "C" void div0_handler()
+{
+    kernel::panic("Division by 0. Code: 0x000F");
 }
 
 extern "C" void pit_handler()
@@ -78,4 +91,10 @@ extern "C" void kbd_handler()
 
     outb(0x20, 0x20);
     outb(0xa0, 0x20);
+}
+
+extern "C" void ata_handler()
+{
+    gfx::print_chr(1);
+    pic_end_slave();
 }

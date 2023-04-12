@@ -7,4 +7,4 @@
   %1_size: dq %1_size - %1
 %endmacro
 
-;IncBin prg1, "../binaries/prg_tst.txt"
+IncBin picture, "../binaries/pic.png"

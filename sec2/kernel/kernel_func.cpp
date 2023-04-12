@@ -1,16 +1,16 @@
 #pragma once
 
 #include "../typedefs.h"
-#include "../stdio/text_print.cpp"
+#include "../gfx_13h/gfx.cpp"
 #include "../io/io.cpp"
 
 namespace kernel
 {
     void panic(const char* str)
     {
-        stdio::clear_screen(BACKGROUND_RED | FOREGROUND_WHITE);
-        stdio::set_cursor_pos(pos_coords(0, 0));
-        stdio::print_str(str, BACKGROUND_RED | FOREGROUND_WHITE);
+        gfx::clear_screen(0x29);
+        gfx::print_str(str, 0x0F); gfx::newl();
+
         cli();
         halt();
     }

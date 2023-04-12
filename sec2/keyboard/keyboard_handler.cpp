@@ -102,16 +102,16 @@ void kbd_arrow(uint_8 sc)
         break;
     
     case 0xD0: // Up released
-        //up_pressed = false;
+        up_pressed = false;
         break;
     case 0xC8: // Down released
-        //down_pressed = false;
+        down_pressed = false;
         break;
     case 0xCD: // Right released
-        //left_pressed = false;
+        left_pressed = false;
         break;
     case 0xCB: // Left released
-        //right_pressed = false;
+        right_pressed = false;
         break;
     
     default:

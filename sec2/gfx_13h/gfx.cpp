@@ -6,8 +6,9 @@
 #include "font1.h"
 #include "../dynamic_mem/heap.cpp"
 #include "../dynamic_mem/mem.cpp"
+#include "../math_nums/math.cpp"
 
-#define GFX_MEM (unsigned short*) 0xA0000
+#define GFX_MEM (uint_16*) 0xA0000
 
 #define GFX_W 320
 #define GFX_H 200
@@ -15,6 +16,8 @@
 
 #define TILE_SIZE 16
 #define ICON_SIZE  8
+
+#define sign(x) ((x < 0) ? -1 :((x > 0) ? 1 : 0))
 
 uint_8* BFR = 0;
 
@@ -28,7 +31,7 @@ namespace gfx
 
     void clear_screen(uint_8 clear_color = bgc)
     {
-        for (int i = 0; i < (GFX_PX_SIZE); i++) BFR[i] = clear_color;
+        for (int i = 0; i < (GFX_PX_SIZE); i++) *(BFR + i) = clear_color;
         char_cols = 0;
         char_rows = 1;
     }
@@ -55,6 +58,11 @@ namespace gfx
         *(BFR + pos_coords(x, y)) = color;
     }
 
+    uint_8 get_pix(uint_16 x, uint_16 y)
+    {
+        return *(BFR + pos_coords(x, y));
+    }
+
     void icon(uint_16 x, uint_16 y, uint_8 icon[ICON_SIZE])
     {
         int i = 0;
@@ -77,6 +85,49 @@ namespace gfx
             {
                 putpix(xx, yy, tile[i]);
                 i++;
+            }
+        }
+    }
+
+    void line(int x1, int y1, int x2, int y2, uint_8 color)
+    {
+        int dx = x2-x1;
+        int dy = y2-y1;
+        int dxabs = __builtin_abs(dx);
+        int dyabs = __builtin_abs(dy);
+        int sdx = sign(dx);
+        int sdy = sign(dy);
+        int x = 0;
+        int y = 0;
+        int px = x1;
+        int py = y1;
+
+        putpix(px, py, color);
+        if (dxabs >= dyabs)
+        {
+            for(int i=0;i<dxabs;i++){
+                y+=dyabs;
+                if (y>=dxabs)
+                {
+                    y-=dxabs;
+                    py+=sdy;
+                }
+                px+=sdx;
+                putpix(px, py, color);
+            }
+        }
+        else
+        {
+            for(int i=0;i<dyabs;i++)
+            {
+                x+=dxabs;
+                if (x>=dyabs)
+                {
+                    x-=dyabs;
+                    px+=sdx;
+                }
+                py+=sdy;
+                putpix(px, py, color);
             }
         }
     }
@@ -146,10 +197,7 @@ namespace gfx
                     putpix(char_cols + yy, char_rows + xx, color);
         
         char_cols += 6;
-        if (char_cols > GFX_W)
-        {
-            newl();
-        }
+        if (char_cols > GFX_W) newl();
         if (char_rows > GFX_H)
         {
             char_rows = 1;
@@ -206,16 +254,21 @@ namespace gfx
         int i = 0;
         while (str[i] != 0)
         {
-            switch (str[i])
-            {
-            case '\n':
-                newl();
+            print_chr(str[i], color, false);
+            //switch (str[i])
+            //{
+            //case '\n':
+                //newl();
+                //i++;
+                //break;
 
-            default:
-                print_chr(str[i], color, false);
-                i++;
-                break;
-            }
+            //default:
+                //print_chr(str[i], color, false);
+                //i++;
+                //break;
+            //}
+
+            i++;
         }
 
         flip();

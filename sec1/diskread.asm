@@ -5,7 +5,7 @@ read_disk:
 
 	mov ah, 0x02
 	mov bx, PRG_SPACE
-	mov al, 64
+	mov al, 128
 	mov dl, [BOOT_DISK]
 	mov ch, 0x00
 	mov dh, 0x00

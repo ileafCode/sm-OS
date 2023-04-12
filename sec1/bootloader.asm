@@ -41,7 +41,7 @@ main:
 
     call read_disk
 
-    mov ax, 0x0013
+    mov ax, 0x0013 ; Set video mode
     int 0x10
 
     jmp PRG_SPACE

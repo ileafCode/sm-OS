@@ -4,7 +4,7 @@ jmp prot_mode
 %include "../sec2/asm/gdt.asm"
 %include "../sec2/asm/detect_mem.asm"
 
-prot_mode:
+prot_mode: ; 16-bit Protected Mode
   call get_mem
   call en_a20
   cli
@@ -12,7 +12,7 @@ prot_mode:
   mov eax, cr0
   or eax, 1
   mov cr0, eax
-  jmp codeseg:start_prot_mode
+  jmp codeseg:start_32
 
 en_a20:
   in al, 0x92
@@ -25,7 +25,7 @@ en_a20:
 %include "../sec2/asm/cpuid.asm"
 %include "../sec2/asm/paging.asm"
 
-start_prot_mode:
+start_32: ; 32-bit Protected Mode
   mov ax, dataseg
   mov ds, ax
   mov ss, ax
@@ -33,6 +33,7 @@ start_prot_mode:
   mov fs, ax
   mov gs, ax
 
+  ; Now moving to 64-bit land.
   call get_cpuid
   call get_long_mode
   call id_paging
@@ -45,10 +46,9 @@ start_prot_mode:
 
 %include "../sec2/idt/idt.asm"
 
-start_64:
+start_64: ; 64-bit Protected Mode
   call activate_sse
   jmp _Z6_startv
-  jmp $
 
 activate_sse:
   mov rax, cr0
